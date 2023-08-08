@@ -1,57 +1,49 @@
-const form = document.getElementById('registrationForm');
-const userTable = document.getElementById('userTable').querySelector('tbody');
-
-form.addEventListener('submit', function(event) {
-  event.preventDefault();
-
-  const name = document.getElementById('name').value;
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  const dob = document.getElementById('dob').value;
-  const acceptedTerms = document.getElementById('acceptedTerms').checked;
-
-  // Validate email format
-  if (!isValidEmail(email)) {
-    alert('Invalid email format');
-    return;
-  }
-
-  // Validate age
-  const age = calculateAge(dob);
-  if (age < 18 || age > 55) {
-    alert('Age must be between 18 and 55 years old');
-    return;
-  }
-
-  const newRow = document.createElement('tr');
-  newRow.innerHTML = `
-    <td>${name}</td>
-    <td>${email}</td>
-    <td>${password}</td>
-    <td>${dob}</td>
-    <td>${acceptedTerms ? 'Yes' : 'No'}</td>
-  `;
-
-  userTable.appendChild(newRow);
-
-  // Clear form
-  form.reset();
-});
-
-// Utility function to validate email
-function isValidEmail(email) {
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailPattern.test(email);
+let user_det=document.getElementById("UserDetails");
+const retent=()=> {
+    let ent= localStorage.getItem("User-details");
+    if(ent){
+        ent=JSON.parse(ent);
+    }
+    else{
+        ent=[];
+    }
+    return ent;
 }
-
-// Utility function to calculate age
-function calculateAge(dob) {
-  const today = new Date();
-  const birthDate = new Date(dob);
-  const age = today.getFullYear() - birthDate.getFullYear();
-  const monthDiff = today.getMonth() - birthDate.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-    return age - 1;
-  }
-  return age;
+let userDet=retent();
+const dispent=()=> {
+    const ent=retent();
+    let tableEntries = '';
+    for (const entry of ent) {
+        const nameCell = `<td>${entry.name}</td>`;
+        const emailCell = `<td>${entry.email}</td>`;
+        const passwordCell = `<td>${entry.password}</td>`;
+        const dobCell = `<td>${entry.dob}</td>`;
+        const acceptTermsCell = `<td>${entry.acceptTerms ? 'true' : 'false'}</td>`;
+      
+        const row = `<tr>${nameCell}${emailCell}${passwordCell}${dobCell}${acceptTermsCell}</tr>`;
+        tableEntries += row;
+      }
+    const table = `<table><tr><th>Name</th><th>Email</th><th>Password</th><th>Dob</th><th>Accepted terms?</th></tr>${tableEntries}</table>`;
+    let details= document.getElementById("User-details");
+    details.innerHTML=table;
+} 
+const SaveDet=(event)=>{
+    event.preventDefault();
+    const name=document.getElementById("name").value;
+    const email=document.getElementById("email").value;
+    const password=document.getElementById("password").value;
+    const dob=document.getElementById("dob").value;
+    const acceptTerms=document.getElementById("acceptTerms").value;
+const entry={
+    name,
+    email,
+    password,
+    dob,
+    acceptTerms
+};
+userDet.push(entry);
+localStorage.setItem("User-details",JSON.stringify(userDet));
+dispent();
 }
+user_det.addEventListener("submit",SaveDet);
+dispent();
