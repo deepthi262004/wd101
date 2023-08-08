@@ -1,6 +1,7 @@
+
 body {
   font-family: Arial, sans-serif;
-  background-color: #f0f0f0;
+  background-color: #f5f5f5;
   margin: 0;
   padding: 0;
 }
@@ -13,7 +14,7 @@ h1 {
 
 form {
   background-color: #fff;
-  border-radius: 5px;
+  border-radius: 8px;
   padding: 20px;
   margin: 20px auto;
   max-width: 400px;
@@ -22,8 +23,8 @@ form {
 
 label {
   display: block;
-  margin-bottom: 5px;
-  color: #666;
+  margin-bottom: 8px;
+  color: #555;
 }
 
 input[type="text"],
@@ -49,4 +50,21 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
   background-color: #0056b3;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+  color: #555;
 }
