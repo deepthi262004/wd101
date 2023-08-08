@@ -1,60 +1,57 @@
 const form = document.getElementById('registrationForm');
 const userTable = document.getElementById('userTable').querySelector('tbody');
 
-// Load existing user data from localStorage on page load
-const storedUserData = JSON.parse(localStorage.getItem('userData')) || [];
-
-// Function to update the table with user data
-function updateTable() {
-  userTable.innerHTML = '';
-
-  storedUserData.forEach(user => {
-    const newRow = document.createElement('tr');
-    newRow.innerHTML = `
-      <td>${user.name}</td>
-      <td>${user.email}</td>
-      <td>${user.password}</td>
-      <td>${user.dob}</td>
-      <td>${user.acceptedTerms ? 'Yes' : 'No'}</td>
-    `;
-    userTable.appendChild(newRow);
-  });
-}
-
-updateTable();
-
 form.addEventListener('submit', function(event) {
   event.preventDefault();
 
   const name = document.getElementById('name').value;
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
-  const dobInput = document.getElementById('dob');
+  const dob = document.getElementById('dob').value;
   const acceptedTerms = document.getElementById('acceptedTerms').checked;
 
-  const dob = new Date(dobInput.value);
-  const today = new Date();
-  const age = today.getFullYear() - dob.getFullYear();
-
-  if (age < 18 || age > 54) {
-    alert('DOB must be between 18 and 54 years old.');
+  // Validate email format
+  if (!isValidEmail(email)) {
+    alert('Invalid email format');
     return;
   }
 
-  const newUser = {
-    name,
-    email,
-    password,
-    dob: dobInput.value,
-    acceptedTerms
-  };
+  // Validate age
+  const age = calculateAge(dob);
+  if (age < 18 || age > 55) {
+    alert('Age must be between 18 and 55 years old');
+    return;
+  }
 
-  storedUserData.push(newUser);
+  const newRow = document.createElement('tr');
+  newRow.innerHTML = `
+    <td>${name}</td>
+    <td>${email}</td>
+    <td>${password}</td>
+    <td>${dob}</td>
+    <td>${acceptedTerms ? 'Yes' : 'No'}</td>
+  `;
 
-  // Save updated user data to localStorage
-  localStorage.setItem('userData', JSON.stringify(storedUserData));
+  userTable.appendChild(newRow);
 
-  updateTable();
-
+  // Clear form
   form.reset();
 });
+
+// Utility function to validate email
+function isValidEmail(email) {
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailPattern.test(email);
+}
+
+// Utility function to calculate age
+function calculateAge(dob) {
+  const today = new Date();
+  const birthDate = new Date(dob);
+  const age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    return age - 1;
+  }
+  return age;
+}
